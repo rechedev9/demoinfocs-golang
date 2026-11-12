@@ -443,6 +443,10 @@ func componentDecoder(r *reader) interface{} {
 }
 
 func findDecoder(f *field) fieldDecoder {
+	if d, ok := fixedWidthDecoder(f, f.fieldType.baseType); ok {
+		return d
+	}
+
 	if v, ok := fieldTypeFactories[f.fieldType.baseType]; ok {
 		return v(f)
 	}
@@ -459,6 +463,10 @@ func findDecoder(f *field) fieldDecoder {
 }
 
 func findDecoderByBaseType(f *field) fieldDecoder {
+	if d, ok := fixedWidthDecoder(f, f.fieldType.genericType.baseType); ok {
+		return d
+	}
+
 	if v, ok := fieldTypeFactories[f.fieldType.genericType.baseType]; ok {
 		return v(f)
 	}
